@@ -1,0 +1,353 @@
+
+cleos wallet open
+cleos wallet unlock
+PW5JQsam1VcycpyCkntUBkhtkZaap5YnRSsYdPzy4qtfjESCececN
+
+levi@levi-ubuntu:~/code/EOS$ cleos create account eosio demotrade EOS8JYW2BKfLthpBi25yx3wNTFbowxSVa5L95MKHgoMeY9syPMAF5
+executed transaction: e12d56529b2bb2e11c015cdbed9467649cd6353cbcd6f2dcabc63e501ce1838c  200 bytes  185 us
+#         eosio <= eosio::newaccount            "0000000000ea3055000050c9dc4ca54a01000000010003c1b4d979902fffd62f3d8680a24f3cde84d20fd0d98bd59dafcb9...
+warning: transaction executed locally, but may not be confirmed by the network yet         ]
+
+eosio-cpp demotrade.cpp -o demotrade.wasm
+
+levi@levi-ubuntu:~/code/EOS/contracts$ cleos set contract demotrade ./demotrade -p demotrade@active
+Reading WASM from /home/levi/code/EOS/contracts/demotrade/demotrade.wasm...
+Publishing contract...
+executed transaction: 542145f9f0d19ae2a3568511658d001f6002e5f8cbcd18ee6feeb049ecdc0d40  15904 bytes  5875 us
+#         eosio <= eosio::setcode               {"account":"demotrade","vmtype":0,"vmversion":0,"code":"0061736d0100000001f2012660000060037f7f7f017f...
+#         eosio <= eosio::setabi                {"account":"demotrade","abi":"0e656f73696f3a3a6162692f312e3200030362757900020475736572046e616d65036e...
+warning: transaction executed locally, but may not be confirmed by the network yet         ]
+
+
+levi@levi-ubuntu:~/code/EOS$ cleos push action demotrade buy '["alice", 5]' -p alice@active
+executed transaction: 81f59d979b7d29154c0e56b07b4bf26007966d76278f70d7c66195025a1d4c4c  112 bytes  204 us
+#     demotrade <= demotrade::buy               {"user":"alice","num":5}
+>> Error: Insufficient inventory.
+warning: transaction executed locally, but may not be confirmed by the network yet         ]
+
+levi@levi-ubuntu:~/code/EOS$ cleos push action demotrade stock '[5]' -p alice@active
+Error 3090004: Missing required authority
+Ensure that you have the related authority inside your transaction!;
+If you are currently using 'cleos push action' command, try to add the relevant authority using -p option.
+Error Details:
+missing authority of demotrade
+pending console output:
+
+levi@levi-ubuntu:~/code/EOS$ cleos push action demotrade stock '[5]' -p demotrade@active
+executed transaction: 977f716379e38b74ccc5091c4571fcfa2fe5320b594a3f971a08cddf519c48bf  104 bytes  8502 us
+#     demotrade <= demotrade::stock             {"num":5}
+warning: transaction executed locally, but may not be confirmed by the network yet         ]
+
+levi@levi-ubuntu:~/code/EOS$ cleos push action demotrade buy '["alice", 2]' -p alice@active
+executed transaction: 3491747dce1cddc6ba6023572904a8f1139bbdfb328b2349090166a0314690ba  112 bytes  310 us
+#     demotrade <= demotrade::buy               {"user":"alice","num":2}
+warning: transaction executed locally, but may not be confirmed by the network yet         ]
+
+levi@levi-ubuntu:~/code/EOS$ cleos get table demotrade demotrade people --lower alice --limit 1
+{
+  "rows": [{
+      "key": "alice",
+      "amount": 2
+    }
+  ],
+  "more": true,
+  "next_key": "5378789841117904896",
+  "next_key_bytes": ""
+}
+
+levi@levi-ubuntu:~/code/EOS$ cleos get table demotrade demotrade people --lower demotrade --limit 1
+{
+  "rows": [{
+      "key": "demotrade",
+      "amount": 3
+    }
+  ],
+  "more": false,
+  "next_key": "",
+  "next_key_bytes": ""
+}
+
+
+levi@levi-ubuntu:~/code/EOS$ cleos get transaction 3491747dce1cddc6ba6023572904a8f1139bbdfb328b2349090166a0314690ba
+{
+  "id": "3491747dce1cddc6ba6023572904a8f1139bbdfb328b2349090166a0314690ba",
+  "trx": {
+    "receipt": {
+      "status": "executed",
+      "cpu_usage_us": 310,
+      "net_usage_words": 14,
+      "trx": [
+        1,{
+          "compression": "none",
+          "prunable_data": {
+            "prunable_data": [
+              0,{
+                "signatures": [
+                  "SIG_K1_KBceFDps3hqpKQTYfrZu7nofNu17Mvx1i9kakPSBSMWP54YJ7et28LExjQS5sQY9FafociUtWc1vYyP396eMsAGYfUKnES"
+                ],
+                "packed_context_free_data": ""
+              }
+            ]
+          },
+          "packed_trx": "d4d02063cc7d5d9ba34b0000000001000050c9dc4ca54a000000000000bc3e010000000000855c3400000000a8ed3232100000000000855c34020000000000000000"
+        }
+      ]
+    },
+    "trx": {
+      "expiration": "2022-09-13T18:49:56",
+      "ref_block_num": 32204,
+      "ref_block_prefix": 1269013341,
+      "max_net_usage_words": 0,
+      "max_cpu_usage_ms": 0,
+      "delay_sec": 0,
+      "context_free_actions": [],
+      "actions": [{
+          "account": "demotrade",
+          "name": "buy",
+          "authorization": [{
+              "actor": "alice",
+              "permission": "active"
+            }
+          ],
+          "data": {
+            "user": "alice",
+            "num": 2
+          },
+          "hex_data": "0000000000855c340200000000000000"
+        }
+      ],
+      "signatures": [
+        "SIG_K1_KBceFDps3hqpKQTYfrZu7nofNu17Mvx1i9kakPSBSMWP54YJ7et28LExjQS5sQY9FafociUtWc1vYyP396eMsAGYfUKnES"
+      ],
+      "context_free_data": []
+    }
+  },
+  "block_time": "2022-09-13T18:49:26.500",
+  "block_num": 3112398,
+  "last_irreversible_block": 3113775,
+  "traces": [{
+      "action_ordinal": 1,
+      "creator_action_ordinal": 0,
+      "closest_unnotified_ancestor_action_ordinal": 0,
+      "receipt": {
+        "receiver": "demotrade",
+        "act_digest": "f92b20133c9e39be1417ee5c2733e33457b9bcff2d8d3484b0b79f74201aa3a0",
+        "global_sequence": 3112413,
+        "recv_sequence": 3,
+        "auth_sequence": [[
+            "alice",
+            2
+          ]
+        ],
+        "code_sequence": 1,
+        "abi_sequence": 1
+      },
+      "receiver": "demotrade",
+      "act": {
+        "account": "demotrade",
+        "name": "buy",
+        "authorization": [{
+            "actor": "alice",
+            "permission": "active"
+          }
+        ],
+        "data": {
+          "user": "alice",
+          "num": 2
+        },
+        "hex_data": "0000000000855c340200000000000000"
+      },
+      "context_free": false,
+      "elapsed": 165,
+      "console": "",
+      "trx_id": "3491747dce1cddc6ba6023572904a8f1139bbdfb328b2349090166a0314690ba",
+      "block_num": 3112398,
+      "block_time": "2022-09-13T18:49:26.500",
+      "producer_block_id": null,
+      "account_ram_deltas": [{
+          "account": "alice",
+          "delta": 128
+        }
+      ],
+      "account_disk_deltas": [],
+      "except": null,
+      "error_code": null,
+      "return_value_hex_data": ""
+    }
+  ]
+}
+
+
+levi@levi-ubuntu:~/code/EOS/contracts$ cleos set contract demotrade ./demotrade -p demotrade@active
+Reading WASM from /home/levi/code/EOS/contracts/demotrade/demotrade.wasm...
+Skipping set abi because the new abi is the same as the existing abi
+Publishing contract...
+executed transaction: f7a063ef901d7961ffab8ba321e17a955f01b03d4244a151c7bcd08036bc9520  16984 bytes  2108 us
+#         eosio <= eosio::setcode               {"account":"demotrade","vmtype":0,"vmversion":0,"code":"0061736d0100000001fd012760000060037f7f7f017f...
+warn  2022-09-16T19:34:51.548 cleos     main.cpp:615                  print_reswarning: transaction executed locally, but may not be confirmed by the network yet
+
+levi@levi-ubuntu:~/code/EOS/contracts$ cleos push action demotrade buy '["alice", 1]' -p alice@active
+Error 3050000: Action validate exception
+Error Details:
+inline action's code account eosio.token does not exist
+pending console output:
+
+levi@levi-ubuntu:~/code/EOS/contracts$ cleos set account permission demotrade active '{"threshold": 1,"keys": [{"key": "EOS8JYW2BKfLthpBi25yx3wNTFbowxSVa5L95MKHgoMeY9syPMAF5","weight": 1}],"accounts": [{"permission":{"actor":"demotrade","permission":"eosio.code"},"weight":1}]}' owner -p demotrade
+executed transaction: d57e96f88c9404a108d2b59a1174abacfbff958f02808e1dcdeab2b5d47a58ab  184 bytes  432 us
+#         eosio <= eosio::updateauth            {"account":"demotrade","permission":"active","parent":"owner","auth":{"threshold":1,"keys":[{"key":"...
+warn  2022-09-16T19:37:14.896 cleos     main.cpp:615                  print_reswarning: transaction executed locally, but may not be confirmed by the network yet
+
+levi@levi-ubuntu:~/code/EOS/contracts$ cleos push action demotrade buy '["alice", 1]' -p alice@active
+Error 3050000: Action validate exception
+Error Details:
+inline action's code account eosio.token does not exist
+pending console output:
+
+levi@levi-ubuntu:~/code/EOS/contracts$ cleos set account permission demotrade active '{"threshold": 1,"keys": [{"key": "EOS8JYW2BKfLthpBi25yx3wNTFbowxSVa5L95MKHgoMeY9syPMAF5","weight": 1}],"accounts": [{"permission":{"actor":"demotrade","permission":"eosio.code"},"weight":1}]}' owner -p demotrade@active
+executed transaction: 65c1537aaa7159c428a781ed4854122f8a7fbd81fa3d31d1b28ac4ce57e7b66f  184 bytes  229 us
+#         eosio <= eosio::updateauth            {"account":"demotrade","permission":"active","parent":"owner","auth":{"threshold":1,"keys":[{"key":"...
+warn  2022-09-16T19:43:43.588 cleos     main.cpp:615                  print_reswarning: transaction executed locally, but may not be confirmed by the network yet
+
+levi@levi-ubuntu:~/code/EOS/contracts$ cleos push action demotrade buy '["alice", 1]' -p alice@active
+Error 3050000: Action validate exception
+Error Details:
+inline action's code account eosio.token does not exist
+pending console output:
+
+levi@levi-ubuntu:~/code/EOS/contracts$ cleos set account permission demotrade active '{"threshold": 1,"keys": [{"key": "EOS8JYW2BKfLthpBi25yx3wNTFbowxSVa5L95MKHgoMeY9syPMAF5","weight": 1}],"accounts": [{"permission":{"actor":"alice","permission":"eosio.code"},"weight":1}]}' owner -p alice@active
+Error 3090005: Irrelevant authority included
+Please remove the unnecessary authority from your action!
+Error Details:
+the owner of the affected permission needs to be the actor of the declared authorization
+
+
+levi@levi-ubuntu:~/code/EOS/contracts$ cleos push action demotrade datas '[]' -p demotrade@active
+executed transaction: 1d042c9f19b4c13bf35a640736a38ce2d67012c38598aaff3caadc8063fadc69  96 bytes  188 us
+#     demotrade <= demotrade::datas             ""
+>> 12
+warn  2022-09-16T20:21:07.506 cleos     main.cpp:615                  print_reswarning: transaction executed locally, but may not be confirmed by the network yet
+levi@levi-ubuntu:~/code/EOS/contracts$
+
+
+levi@levi-ubuntu:~/code/EOS/contracts$ cleos create account eosio eosio.token EOS8JYW2BKfLthpBi25yx3wNTFbowxSVa5L95MKHgoMeY9syPMAF5
+executed transaction: c9c8b5e46c0bdfca8d22579f2282abe67dbe8b8c476d38c8b3cee0f2cd8acee0  200 bytes  238 us
+#         eosio <= eosio::newaccount            {"creator":"eosio","name":"eosio.token","owner":{"threshold":1,"keys":[{"key":"EOS8JYW2BKfLthpBi25yx...
+warning: transaction executed locally, but may not be confirmed by the network yet         ]
+
+levi@levi-ubuntu:~/code/EOS/contracts/eosio.contracts/contracts/eosio.token$ cleos set contract eosio.token . --abi eosio.token.abi -p eosio.token@active
+Reading WASM from /home/levi/code/EOS/contracts/eosio.contracts/contracts/eosio.token/eosio.token.wasm...
+Publishing contract...
+executed transaction: 6dd331668222bec37cf2c1e3a9cb3ed1ae0b425eb50540a0b34444dbd804474e  19368 bytes  2652 us
+#         eosio <= eosio::setcode               {"account":"eosio.token","vmtype":0,"vmversion":0,"code":"0061736d010000000180022860000060037f7f7f01...
+#         eosio <= eosio::setabi                {"account":"eosio.token","abi":"0e656f73696f3a3a6162692f312e320008076163636f756e7400010762616c616e63...
+warn  2022-09-19T21:15:05.661 cleos     main.cpp:615                  print_reswarning: transaction executed locally, but may not be confirmed by the network yet
+
+levi@levi-ubuntu:~/code/EOS/contracts/eosio.contracts/contracts/eosio.token$ cleos push action eosio.token create '[ "alice", "1000000000.0000 SYS"]' -p eosio.token@active
+executed transaction: c02991d92e77d4ebf056886562e637540e5f6bab42b7a9a9fb5e2fc4c3ce47a7  120 bytes  384 us
+#   eosio.token <= eosio.token::create          {"issuer":"alice","maximum_supply":"1000000000.0000 SYS"}
+warn  2022-09-19T21:16:43.321 cleos     main.cpp:615                  print_reswarning: transaction executed locally, but may not be confirmed by the network yet
+
+levi@levi-ubuntu:~/code/EOS/contracts/eosio.contracts/contracts/eosio.token$ cleos push action eosio.token issue '[ "alice", "100.0000 SYS", "memo" ]' -p alice@active
+executed transaction: 6a9914a4382423a09ebcfb8adc3e24c31efd2abffc401774f464b77b8063d262  128 bytes  193 us
+#   eosio.token <= eosio.token::issue           {"to":"alice","quantity":"100.0000 SYS","memo":"memo"}
+warn  2022-09-19T21:17:30.186 cleos     main.cpp:615                  print_reswarning: transaction executed locally, but may not be confirmed by the network yet
+
+
+levi@levi-ubuntu:~/code/EOS$ cleos push action demotrade buy '["alice", 1]' -p alice@active
+Error 3090003: Provided keys, permissions, and delays do not satisfy declared authorizations
+Ensure that you have the related private keys inside your wallet and your wallet is unlocked.
+Error Details:
+transaction declares authority '{"actor":"alice","permission":"active"}', but does not have signatures for it under a provided delay of 0 ms, provided permissions [{"actor":"demotrade","permission":"eosio.code"}], provided keys [], and a delay max limit of 3888000000 ms
+pending console output:
+
+levi@levi-ubuntu:~/code/EOS$ cleos set account permission demotrade active '{"threshold": 1,"keys": [{"key": "EOS8JYW2BKfLthpBi25yx3wNTFbowxSVa5L95MKHgoMeY9syPMAF5","weight": 1}],"accounts": [{"permission":{"actor":"demotrade","permission":"eosio.code"},"weight":1}]}' owner -p demotrade@active
+executed transaction: c579cdb9103f677046fe14de9068560816d9c2118b9556b1e0a62bf0a0949f24  184 bytes  102 us
+#         eosio <= eosio::updateauth            {"account":"demotrade","permission":"active","parent":"owner","auth":{"threshold":1,"keys":[{"key":"...
+warn  2022-09-19T21:20:08.388 cleos     main.cpp:615                  print_reswarning: transaction executed locally, but may not be confirmed by the network yet
+
+
+levi@levi-ubuntu:~/code/EOS$ cleos set contract eosio.token --clear
+Publishing contract...
+executed transaction: 79afca0a5be3fc7b16c2f8009f0f233ecabf722a93d0341ccc6b9382a09d04c0  104 bytes  110 us
+#         eosio <= eosio::setcode               {"account":"eosio.token","vmtype":0,"vmversion":0,"code":""}
+#         eosio <= eosio::setabi                {"account":"eosio.token","abi":""}
+warning: transaction executed locally, but may not be confirmed by the network yet         ]
+
+
+levi@levi-ubuntu:~/code/EOS/contracts/eosio.contracts/contracts/eosio.token$ cleos set account permission eosio.token owner EOS6MRyAjQq8ud7hVNYcfnVPJqcVpscN5So8BhtHuGYqET5GDW5CV -p eosio.token@owner
+executed transaction: ca7e83bd19cd5b9cf597530ec8f5e7975e4f34a46ba3ee2b5de788a63c56e91d  160 bytes  150 us
+#         eosio <= eosio::updateauth            {"account":"eosio.token","permission":"owner","parent":"","auth":{"threshold":1,"keys":[{"key":"EOS6...
+warning: transaction executed locally, but may not be confirmed by the network yet         ]
+levi@levi-ubuntu:~/code/EOS/contracts/eosio.contracts/contracts/eosio.token$ cleos set account permission eosio.token active EOS6MRyAjQq8ud7hVNYcfnVPJqcVpscN5So8BhtHuGYqET5GDW5CV -p eosio.token@owner
+executed transaction: ad96a53d28c825c3980819511b950035264fdcfd90b3e180c5467cdafc8ef1fc  160 bytes  100 us
+#         eosio <= eosio::updateauth            {"account":"eosio.token","permission":"active","parent":"owner","auth":{"threshold":1,"keys":[{"key"...
+warning: transaction executed locally, but may not be confirmed by the network yet         ]
+levi@levi-ubuntu:~/code/EOS/contracts/eosio.contracts/contracts/eosio.token$ cleos get account eosio.token
+created: 2022-09-19T21:12:21.500
+permissions:
+     owner     1:    1 EOS6MRyAjQq8ud7hVNYcfnVPJqcVpscN5So8BhtHuGYqET5GDW5CV
+        active     1:    1 EOS6MRyAjQq8ud7hVNYcfnVPJqcVpscN5So8BhtHuGYqET5GDW5CV
+memory:
+     quota:       unlimited  used:     480.9 KiB
+
+net bandwidth:
+     used:               unlimited
+     available:          unlimited
+     limit:              unlimited
+
+cpu bandwidth:
+     used:               unlimited
+     available:          unlimited
+     limit:              unlimited
+
+levi@levi-ubuntu:~/code/EOS/contracts$ cleos set account permission alice active '{"threshold": 1, "keys":[{"key":"EOS6MRyAjQq8ud7hVNYcfnVPJqcVpscN5So8BhtHuGYqET5GDW5CV", "weight":1}], "accounts":[{"permission":{"actor":"demotrade","permission":"eosio.code"},"weight":1}], "waits":[] }' owner -p alice
+executed transaction: 58183529a6bc19ac9bd77f7bd7fd4624e758987355eb1dda4464308faef59d00  184 bytes  105 us
+#         eosio <= eosio::updateauth            {"account":"alice","permission":"active","parent":"owner","auth":{"threshold":1,"keys":[{"key":"EOS6...
+warning: transaction executed locally, but may not be confirmed by the network yet         ]
+
+levi@levi-ubuntu:~/code/EOS/contracts$ cleos get account alice
+created: 2022-03-14T21:28:54.000
+permissions:
+     owner     1:    1 EOS6MRyAjQq8ud7hVNYcfnVPJqcVpscN5So8BhtHuGYqET5GDW5CV
+        active     1:    1 EOS6MRyAjQq8ud7hVNYcfnVPJqcVpscN5So8BhtHuGYqET5GDW5CV, 1 demotrade@eosio.code
+memory:
+     quota:       unlimited  used:     3.051 KiB
+
+net bandwidth:
+     used:               unlimited
+     available:          unlimited
+     limit:              unlimited
+
+cpu bandwidth:
+     used:               unlimited
+     available:          unlimited
+     limit:              unlimited
+
+levi@levi-ubuntu:~/code/EOS/contracts$ cleos push action demotrade buy '["alice", 1]' -p alice@active
+Error 3050003: eosio_assert_message assertion failure
+Error Details:
+assertion failure with message: datastream attempted to read past the end
+pending console output:
+
+levi@levi-ubuntu:~/code/EOS/contracts/demotrade$ cleos push action demotrade trans '[]' -p demotrade@active
+Error 3050003: eosio_assert_message assertion failure
+Error Details:
+assertion failure with message: get
+pending console output:
+
+levi@levi-ubuntu:~/code/EOS/contracts/demotrade$ cleos push action demotrade trans '[ "alice", 1 ]' -p alice@active
+executed transaction: 9397adea1e8946c65a7b9584d07012c24682908582b14df43c075ac34f24061c  112 bytes  182 us
+#     demotrade <= demotrade::trans             {"user":"alice","num":1}
+#   eosio.token <= eosio.token::transfer        {"from":"alice","to":"demotrade","quantity":"0.0001 SYS","memo":"payment from user"}
+#         alice <= eosio.token::transfer        {"from":"alice","to":"demotrade","quantity":"0.0001 SYS","memo":"payment from user"}
+#     demotrade <= eosio.token::transfer        {"from":"alice","to":"demotrade","quantity":"0.0001 SYS","memo":"payment from user"}
+warning: transaction executed locally, but may not be confirmed by the network yetult         ]
+
+levi@levi-ubuntu:~/code/EOS/contracts/demotrade$ cleos push action demotrade trans '[ "alice", 1 ]' -p alice@active
+executed transaction: 6c2a57c76c003fcbb3342e6766b3ee6bf76c9fa73e2f11d20852ba745ba3d72f  112 bytes  159 us
+#     demotrade <= demotrade::trans             {"user":"alice","num":1}
+#   eosio.token <= eosio.token::transfer        {"from":"alice","to":"demotrade","quantity":"1.0000 SYS","memo":"payment from user"}
+#         alice <= eosio.token::transfer        {"from":"alice","to":"demotrade","quantity":"1.0000 SYS","memo":"payment from user"}
+#     demotrade <= eosio.token::transfer        {"from":"alice","to":"demotrade","quantity":"1.0000 SYS","memo":"payment from user"}
+warning: transaction executed locally, but may not be confirmed by the network yetult         ] 
+

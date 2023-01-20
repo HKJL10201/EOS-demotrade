@@ -1,0 +1,70 @@
+>>> db_get_i64
+
+>> $func134
+62: %C01 = get_local 1()
+64: %C02 = #0x0
+66: %C03 = #0x0
+68: %C04 = call_to_db_get_i64(%C03, %C02, %C01)
+
+a6: %FFE = get_local 1()
+a8: %FFF = get_local 2()
+aa: %1000 = get_local 4()
+ac: %1001 = call_to_db_get_i64(%1000, %FFF, %FFE)
+
+>>> db_find_i64
+
+>> $func133
+46: %17 = get_local 5()
+48: %18 = get_local 4()
+4a: %19 = #0x808080808095D6D4AA7F
+55: %1A = get_local 5()
+57: %1B = call_to_db_find_i64(%1A, %19, %18, %17)
+
+>> $func135
+4c: %18 = get_local 4()
+4e: %19 = get_local 2()
+50: %1A = #0x808080808095D6D4AA7F
+5b: %1B = get_local 1()
+5d: %1C = call_to_db_find_i64(%1B, %1A, %19, %18)
+
+>> $func137
+49: %17 = get_local 6()
+4b: %18 = get_local 5()
+4d: %19 = #0x808080808095D6D4AA7F
+58: %1A = get_local 6()
+5a: %1B = call_to_db_find_i64(%1A, %19, %18, %17)
+
+>>> db_update_i64
+
+>> $func148
+%164 = get_local 1()
+%165 = i32.load 2, 20(%164)
+%166 = get_local 2()
+%167 = get_local 3()
+%168 = #0x10
+call_to_db_update_i64(%168, %167, %166, %165)
+
+>>> db_store_i64
+
+>> $func149
+%FA = get_local 1()
+%FB = i64.load 3, 8(%FA)
+%FC = #0x808080808095D6D4AA7F
+%FD = get_local 2()
+%FE = get_local 5()
+%FF = i64.load 3, 0(%FE)
+tee_local 6(%FF)
+%101 = get_local 4()
+%102 = #0x10
+%103 = i32.add(%102, %101)
+%104 = #0x10
+%105 = call_to_db_store_i64(%104, %103, %FF, %FD, %FC, %FB)
+
+
+>>>> inline
+
+>> $func143
+%BA = get_local 3()
+%BB = #0x8
+%BC = i32.add(%BB, %BA)
+call_to_$func142(%BC)
